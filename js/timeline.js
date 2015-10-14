@@ -76,8 +76,6 @@ function Timeline (el) {
 	    + '</g>';
 	u = Math.round;
 
-//<path d="M175.49999999999997,0L175.49999999999997,61.488" stroke="#2e5dc1" stroke-width="1" fill-opacity="1" fill="none"></path>
-
 	// graduations
 
 	res = res + '<g>';
@@ -122,7 +120,6 @@ function Timeline (el) {
 		+ u(this.row_height - this.row_padding * 2)
 		+ '" stroke="none" stroke-width="0" fill="' + this.row_color + '"></rect>';
 
-//<text text-anchor="start" x="14.5" y="37.044" font-family="Arial" font-size="18" stroke="none" stroke-width="0" fill="#ffffff">Accueil</text>
 	    res = res + '<text x="' + u(x1 + 10) + '" y="' + u(this.row_height - this.row_padding - 12)
 	    + '" text-anchor="start" ' 
 		+ ' font-family="' + this.row_font_family + '" font-size="' + this.row_font_size 
