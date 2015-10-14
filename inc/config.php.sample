@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * Database config variables
+ */
+define("DB_HOST", "localhost");
+define("DB_USER", "root");
+define("DB_PASSWORD", "");
+define("DB_DATABASE", "roomlizard");
+
+$config['project_name'] = "roomlizard";
+$config['default_view'] = "dashboard";
+
+$config['auth_user'] = "admin";
+$config['auth_pass'] = ""; // sha1 encoded
+
+$config['views'] = Array(
+			 "login"      => "",
+			 "dashboard"  => "Dashboard",
+			 "logout"     => "Logout"
+			 );
+
+?>
