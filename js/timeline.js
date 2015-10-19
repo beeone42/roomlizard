@@ -140,7 +140,7 @@ function Timeline (el) {
 	    if (label.length > max)
 		label = label.substring(0, max - 3) + "...";
 	    res = res + '<text title="' + fulllabel + '" owner="' + owner +'" horaire="' + shoraire
-		+ '" id="TT_' + i + '" rid="T_' + i
+		+ '" id="TT_' + i + '" rid="T_' + i + '" class="timelabel'
 		+ '" x="' + u(x1 + 10) + '" y="' + u(this.row_height - this.row_padding - 12)
 		+ '" text-anchor="start" width="' + u(x2 - x1) + '"' 
 		+ ' font-family="' + this.row_font_family + '" font-size="' + this.row_font_size 
@@ -169,30 +169,26 @@ function Timeline (el) {
 
 	this.el.html(res);
 
-	for (i = 0; i < this.data.length; i++)
-	{
-	    $("#TT_" + i).click(function (){
-		//alert($(this).attr("title"));
-		rid = "#" + $(this).attr("rid");
-		$(".timerect").attr("stroke-width", "0px");
-		$(rid).attr("stroke-width", "5px");
-		$("#tl_tooltip").html(
-		    $(this).attr("title") + "<br />\n"
-			+ $(this).attr("owner") + "<br />\n"
-			+ $(this).attr("horaire"));
-		$("#tl_tooltip").css("visibility", "visible");
-		x = u($(this).attr("x"));
-		max = u(u(graph_right) - u(tooltip_width));
-		if (x > max)
-		    x = max;
-		$("#tl_tooltip").css("left", x + "px");
-	    });
-	    $("#T_" + i).click(function (){
-		$("#T" + $(this).attr('id')).trigger("click");
-	    });
-	}
+	// tooltips on mouseover
 
-
+	$(".timelabel").mouseover(function (){
+	    rid = "#" + $(this).attr("rid");
+	    $(".timerect").attr("stroke-width", "0px");
+	    $(rid).attr("stroke-width", "5px");
+	    $("#tl_tooltip").html(
+		$(this).attr("title") + "<br />\n"
+		    + $(this).attr("owner") + "<br />\n"
+		    + $(this).attr("horaire"));
+	    $("#tl_tooltip").css("visibility", "visible");
+	    x = u($(this).attr("x"));
+	    max = u(u(graph_right) - u(tooltip_width));
+	    if (x > max)
+		x = max;
+	    $("#tl_tooltip").css("left", x + "px");
+	});
+	$(".timerect").mouseover(function (){
+	    $("#T" + $(this).attr('id')).trigger("mouseover");
+	});
     };
 
     this.in_interval = function(t, t1, t2) {
