@@ -2,7 +2,7 @@ function Timeline (el) {
     this.data = [
 	['Accueil',          'ns@staff.42.fr', [09, 00], [11, 00]],
 	['CSS Fundamentals', 'Andre AUBIN', [11, 30], [14, 00]],
-	['Intro JavaScript', 'sebastien.benoit@gmail.com', [14, 30], [16, 15]],
+	['Intro JavaScript', 'sebastien.benoit@gmail.com', [14, 37], [16, 15]],
 	['Advanced Javascript', 'jacob@staff.42.fr', [16, 30], [19, 00]]
     ];
     this.color = "#fff";
@@ -29,6 +29,8 @@ function Timeline (el) {
     this.tooltip_height = 100;
     this.tooltip_bgcolor = "#fff";
     this.tooltip_opacity = 0.8;
+    this.current_name = "---";
+    this.current_time = "0:00 - 0:00";
 
     this.parse_data = function() {
 	this.graph_left = this.graph_padding;
@@ -153,13 +155,13 @@ function Timeline (el) {
        var h = today.getHours();
        var m = today.getMinutes();
 
-	xctl = this.t_to_x(h - this.first_hour, m);
-	res = res + '<g><line x1="' + xctl + '" y1="0" x2="' + xctl + '" y2="' + this.row_height + '" style="stroke:rgb(0,255,0);stroke-width:2" /></g>';
+	xctl = this.graph_left + this.t_to_x(h - this.first_hour, m);
+	res = res + '<g><line id="ctl" x1="' + xctl + '" y1="0" x2="' + xctl + '" y2="' + this.row_height + '" style="stroke:rgb(0,255,0);stroke-width:2" /></g>';
 
 	// tooltips
 
 	res = res + '</svg></div>'
-            + '<div id="tl_tooltip" style="position: absolute; padding: 5px; '
+            + '<div id="tl_tooltip" style="position: absolute; padding: 5px; font-size: 1.2em; '
 	    + 'left: 0px; top: -' +u(20 + this.tooltip_height) + 'px; width: '
 	    + this.tooltip_width + 'px; height:' + this.tooltip_height + 'px; opacity: ' + this.tooltip_opacity + '; '
 	    + 'background-color: ' + this.tooltip_bgcolor + '; color: #000; visibility: hidden;"></div>'
@@ -188,6 +190,47 @@ function Timeline (el) {
 	    $("#T_" + i).click(function (){
 		$("#T" + $(this).attr('id')).trigger("click");
 	    });
+	}
+
+
+    };
+
+    this.in_interval = function(t, t1, t2) {
+	if ((t[0] < t1[0]) || (t[0] > t2[0]))
+	    return false;
+	if ((t[0] > t1[0]) && (t[0] < t2[0]))
+	    return true;
+	if ((t[0] == t1[0]) && (t[1] < t1[1])) // e.g.: 14:12 < 14:15-15:00
+	    return false;
+	if ((t[0] == t2[0]) && (t[1] > t2[1])) // e.g.: 14:12 > 12:15-14:05
+	    return false;
+	return true;
+    };
+
+    this.update = function () {
+       var today = new Date();
+       var h = today.getHours();
+       var m = today.getMinutes();
+
+	xctl = this.graph_left + this.t_to_x(h - this.first_hour, m);
+	$("#ctl").attr("x1", xctl);
+	$("#ctl").attr("x2", xctl);
+
+	// in event ?
+	in_event = false;
+	for (j = 0; j < this.data.length; j++)
+	{
+	    d = this.data[j];
+	    if (this.in_interval([h,m], d[2], d[3]))
+	    {
+		in_event = true;
+		this.current_name = d[0];
+		this.current_time = d[2][0] + ":" + d[2][1] + " - " + d[3][0] + ":" +d[3][1];
+	    }
+	}
+	if (!in_event)
+	{
+	    this.current_name = "Free";
 	}
     };
 
