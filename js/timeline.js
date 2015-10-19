@@ -2,7 +2,7 @@ function Timeline (el) {
     this.data = [
 	['Accueil',          'ns@staff.42.fr', [09, 00], [11, 00]],
 	['CSS Fundamentals', 'Andre AUBIN', [11, 30], [14, 00]],
-	['Intro JavaScript', 'sebastien.benoit@gmail.com', [14, 37], [16, 15]],
+	['Intro JavaScript', 'sebastien.benoit@gmail.com', [14, 30], [15, 37]],
 	['Advanced Javascript', 'jacob@staff.42.fr', [16, 30], [19, 00]]
     ];
     this.color = "#fff";
@@ -199,7 +199,7 @@ function Timeline (el) {
 	    return true;
 	if ((t[0] == t1[0]) && (t[1] < t1[1])) // e.g.: 14:12 < 14:15-15:00
 	    return false;
-	if ((t[0] == t2[0]) && (t[1] > t2[1])) // e.g.: 14:12 > 12:15-14:05
+	if ((t[0] == t2[0]) && (t[1] >= t2[1])) // e.g.: 14:12 > 12:15-14:05
 	    return false;
 	return true;
     };
