@@ -129,10 +129,10 @@ function Timeline (el) {
 	    x2 = this.graph_left + this.t_to_x(u(stop[0] - this.first_hour), stop[1]);
 	    w = x2 - x1;
 	    max = u((w * 1.5) / this.row_font_size);
-	    res = res + '<rect id="T_' + i
+	    res = res + '<rect id="T_' + i + '" class="timerect" '
 		+ '" x="' + x1 + '" y="' + this.row_padding + '" width="' + u(x2 - x1) + '" height="'
 		+ u(this.row_height - this.row_padding * 2)
-		+ '" stroke="none" stroke-width="0" fill="' + this.row_color + '"></rect>';
+		+ '" stroke="#000000" stroke-width="0" fill="' + this.row_color + '"></rect>';
 
 	    fulllabel = label;
 	    if (label.length > max)
@@ -163,7 +163,8 @@ function Timeline (el) {
 	    $("#TT_" + i).click(function (){
 		//alert($(this).attr("title"));
 		rid = "#" + $(this).attr("rid");
-		$(rid).attr("stroke-width", "2");
+		$(".timerect").attr("stroke-width", "0px");
+		$(rid).attr("stroke-width", "5px");
 		$("#tl_tooltip").html(
 		    $(this).attr("title") + "<br />\n"
 			+ $(this).attr("owner") + "<br />\n"
