@@ -186,6 +186,11 @@ function Timeline (el) {
 		x = max;
 	    $("#tl_tooltip").css("left", x + "px");
 	});
+	$(".timelabel,.timerect").mouseout(function (){
+	    $("#tl_tooltip").css("visibility", "hidden");
+	    $(".timerect").attr("stroke-width", "0px");
+	});
+
 	$(".timerect").mouseover(function (){
 	    $("#T" + $(this).attr('id')).trigger("mouseover");
 	});
