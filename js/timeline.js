@@ -25,6 +25,8 @@ function Timeline (el) {
     this.row_font_family = "Arial";
     this.row_font_size = 18;
     this.row_font_color = "white";
+    this.tooltip_width = 500;
+    this.tooltip_height = 50;
 
     this.parse_data = function() {
 	this.graph_left = this.graph_padding;
@@ -59,6 +61,14 @@ function Timeline (el) {
     this.t_to_x = function(h, m) {
 	t = parseFloat(h) + (parseFloat(m)  / 60.0);
 	return (parseFloat(this.graph_cell) * t);
+    };
+
+    this.t_to_str = function(h, m) {
+	tmp = h + ":";
+	if (m < 10)
+	    tmp = tmp + "0";
+	tmp = tmp + m;
+	return (tmp);
     };
 
     this.draw = function () {
@@ -110,26 +120,50 @@ function Timeline (el) {
 	    tooltip = d[1];
 	    start = d[2];
 	    stop = d[3];
+	    sstart = this.t_to_str(start[0], start[1]);
+	    sstop = this.t_to_str(stop[0], stop[1]);
+	    shoraire = sstart + " - " + sstop;
 	    x1 = this.graph_left + this.t_to_x(u(start[0] - this.first_hour), start[1]);
 	    x2 = this.graph_left + this.t_to_x(u(stop[0] - this.first_hour), stop[1]);
 	    w = x2 - x1;
 	    max = u((w * 1.5) / this.row_font_size);
-	    if (label.length > max)
-		label = label.substring(0, max - 3) + "...";
-	    res = res + '<rect x="' + x1 + '" y="' + this.row_padding + '" width="' + u(x2 - x1) + '" height="'
+	    res = res + '<rect id="TR_' + i
+		+ '" x="' + x1 + '" y="' + this.row_padding + '" width="' + u(x2 - x1) + '" height="'
 		+ u(this.row_height - this.row_padding * 2)
 		+ '" stroke="none" stroke-width="0" fill="' + this.row_color + '"></rect>';
 
-	    res = res + '<text x="' + u(x1 + 10) + '" y="' + u(this.row_height - this.row_padding - 12)
-	    + '" text-anchor="start" ' 
+	    if (label.length > max)
+		label = label.substring(0, max - 3) + "...";
+	    res = res + '<text title="' + label + '"  horaire="' + shoraire + '" id="TT_' + i
+		+ '"x="' + u(x1 + 10) + '" y="' + u(this.row_height - this.row_padding - 12)
+		+ '" text-anchor="start" width="' + u(x2 - x1) + '"' 
 		+ ' font-family="' + this.row_font_family + '" font-size="' + this.row_font_size 
 		+ '" stroke-width="0" stroke="#000000" fill="' + this.row_font_color + '">' + label + '</text>';
 
 	}
 	res = res + '</g>';
 
-	res = res + '</svg></div></div></div>';
+	res = res + '</svg></div>'
+            + '<div id="tl_tooltip" style="position: absolute; padding: 5px; '
+	    + 'left: 0px; top: -70px; width: ' + this.tooltip_width + 'px; height:' + this.tooltip_height + 'px; opacity: 0.5; '
+	    + 'background-color: #fff; color: #000; visibility: hidden;">pouet</div>'
+	    + '</div></div>';
+
 	this.el.html(res);
+
+	for (i = 0; i < this.data.length; i++)
+	{
+	    $("#TT_" + i).click(function (){
+		//alert($(this).attr("title"));
+		$("#tl_tooltip").html($(this).attr("title") + "<br />\n" + $(this).attr("horaire"));
+		$("#tl_tooltip").css("visibility", "visible");
+		x = u($(this).attr("x"));
+		max = u(u(graph_right) - u(tooltip_width));
+		if (x > max)
+		    x = max;
+		$("#tl_tooltip").css("left", x + "px");
+	    });
+	}
     };
 
     this.add_item = function (label, tooltip, start, end) {
