@@ -2,7 +2,7 @@
 <header>
   <div class="container">
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-12 noselect">
         <h1 id="timeline_status">---</h1>
         <h2 id="timeline_time">---</h2>
       </div>
@@ -13,7 +13,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-        <div id="timeline2" style="height: 80px;"></div>
+        <div id="timeline2" class="noselect" style="height: 80px;"></div>
       </div>
     </div>
   </div>
