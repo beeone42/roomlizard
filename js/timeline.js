@@ -129,7 +129,7 @@ function Timeline (el) {
 	    x2 = this.graph_left + this.t_to_x(u(stop[0] - this.first_hour), stop[1]);
 	    w = x2 - x1;
 	    max = u((w * 1.5) / this.row_font_size);
-	    res = res + '<rect id="T_' + i + '" class="timerect" '
+	    res = res + '<rect id="T_' + i + '" class="timerect" rx="5" ry="5" '
 		+ '" x="' + x1 + '" y="' + this.row_padding + '" width="' + u(x2 - x1) + '" height="'
 		+ u(this.row_height - this.row_padding * 2)
 		+ '" stroke="#000000" stroke-width="0" fill="' + this.row_color + '"></rect>';
@@ -146,6 +146,15 @@ function Timeline (el) {
 
 	}
 	res = res + '</g>';
+
+	// current time line
+
+       var today = new Date();
+       var h = today.getHours();
+       var m = today.getMinutes();
+
+	xctl = this.t_to_x(h - this.first_hour, m);
+	res = res + '<g><line x1="' + xctl + '" y1="0" x2="' + xctl + '" y2="' + this.row_height + '" style="stroke:rgb(0,255,0);stroke-width:2" /></g>';
 
 	// tooltips
 
