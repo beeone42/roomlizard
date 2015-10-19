@@ -31,6 +31,10 @@
 	 tl.update();
 	 $("#timeline_status").html(tl.current_name);
 	 $("#timeline_time").html(tl.current_time);
+	 if (tl.in_event)
+	   $("header").removeClass("dispo").addClass("indispo");
+	 else
+	   $("header").removeClass("indispo").addClass("dispo");
        }, 1000);
 
    }

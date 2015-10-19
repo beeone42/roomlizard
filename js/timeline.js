@@ -15,7 +15,7 @@ function Timeline (el) {
     this.el = $(el);
     this.x = this.el.width();
     this.y = this.el.height();
-    this.first_hour = 7;
+    this.first_hour = 9;
     this.last_hour = 19;
     this.graph_padding = 10;
     this.graph_cell = 0;
@@ -39,11 +39,6 @@ function Timeline (el) {
 
 	for (i = 0; i < this.data.length; i++)
 	{
-	    if (i == 0)
-	    {
-		this.first_hour = this.data[i][2][0];
-		this.last_hour = this.data[i][3][0];
-	    }
 	    if (this.data[i][2][0] < this.first_hour)
 		this.first_hour = this.data[i][2][0];
 	    if (this.data[i][3][0] > this.last_hour)
@@ -156,7 +151,8 @@ function Timeline (el) {
        var m = today.getMinutes();
 
 	xctl = this.graph_left + this.t_to_x(h - this.first_hour, m);
-	res = res + '<g><line id="ctl" x1="' + xctl + '" y1="0" x2="' + xctl + '" y2="' + this.row_height + '" style="stroke:rgb(0,255,0);stroke-width:2" /></g>';
+	res = res + '<g><line id="ctl" x1="' + xctl + '" y1="0" x2="' + xctl
+	    + '" y2="' + this.row_height + '" style="stroke:rgb(0,255,0);stroke-width:2" /></g>';
 
 	// tooltips
 
@@ -218,7 +214,7 @@ function Timeline (el) {
 	$("#ctl").attr("x2", xctl);
 
 	// in event ?
-	in_event = false;
+	this.in_event = false;
 	for (j = 0; j < this.data.length; j++)
 	{
 	    d = this.data[j];
@@ -229,9 +225,21 @@ function Timeline (el) {
 		this.current_time = d[2][0] + ":" + d[2][1] + " - " + d[3][0] + ":" +d[3][1];
 	    }
 	}
-	if (!in_event)
+	if (!this.in_event)
 	{
-	    this.current_name = "Free";
+	    this.current_name = "Disponible";
+	    h2 = 23;
+	    m2 = 59;
+	    for (j = 0; j < this.data.length; j++)
+	    {
+		d = this.data[j];
+		if (this.in_interval(d[2], [h,m], [h2,m2]))
+		{
+		    h2 = d[2][0];
+		    m2 = d[2][1];
+		}
+	    }
+	    this.current_time = h + ":" + m + " - " + h2 + ":" + m2;
 	}
     };
 

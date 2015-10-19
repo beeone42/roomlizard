@@ -15,6 +15,17 @@ body {
     border-color: transparent;
 }
 
+.dispo {
+    background-color: lime;
+    border-color: lime;
+    color: black;
+}
+.indispo {
+    background-color: red;
+    border-color: red;
+    color: white;
+}
+
 p {
     font-size: 20px;
 }
@@ -76,7 +87,8 @@ section .container {
 @media(min-width:768px) {
     header .container {
         padding-top: 100px;
-        padding-bottom: 100px;
+        padding-bottom: 90px;
+	margin-bottom: 10px;
 	padding-left: 0px;
 	padding-right: 0px;
     }
