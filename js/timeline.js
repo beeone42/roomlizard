@@ -1,9 +1,9 @@
 function Timeline (el) {
     this.data = [
-	['Accueil',          'plop', [09, 00], [11, 00]],
-	['CSS Fundamentals', 'plop', [11, 30], [14, 00]],
-	['Intro JavaScript', 'plop', [14, 30], [16, 15]],
-	['Advanced Javascript', 'p', [16, 30], [19, 00]]
+	['Accueil',          'ns@staff.42.fr', [09, 00], [11, 00]],
+	['CSS Fundamentals', 'Andre AUBIN', [11, 30], [14, 00]],
+	['Intro JavaScript', 'sebastien.benoit@gmail.com', [14, 30], [16, 15]],
+	['Advanced Javascript', 'jacob@staff.42.fr', [16, 30], [19, 00]]
     ];
     this.color = "#fff";
     this.bgcolor = "#00e";
@@ -25,8 +25,10 @@ function Timeline (el) {
     this.row_font_family = "Arial";
     this.row_font_size = 18;
     this.row_font_color = "white";
-    this.tooltip_width = 500;
-    this.tooltip_height = 50;
+    this.tooltip_width = 300;
+    this.tooltip_height = 100;
+    this.tooltip_bgcolor = "#fff";
+    this.tooltip_opacity = 0.8;
 
     this.parse_data = function() {
 	this.graph_left = this.graph_padding;
@@ -117,7 +119,7 @@ function Timeline (el) {
 	{
 	    d = this.data[i];
 	    label = d[0];
-	    tooltip = d[1];
+	    owner = d[1];
 	    start = d[2];
 	    stop = d[3];
 	    sstart = this.t_to_str(start[0], start[1]);
@@ -127,15 +129,17 @@ function Timeline (el) {
 	    x2 = this.graph_left + this.t_to_x(u(stop[0] - this.first_hour), stop[1]);
 	    w = x2 - x1;
 	    max = u((w * 1.5) / this.row_font_size);
-	    res = res + '<rect id="TR_' + i
+	    res = res + '<rect id="T_' + i
 		+ '" x="' + x1 + '" y="' + this.row_padding + '" width="' + u(x2 - x1) + '" height="'
 		+ u(this.row_height - this.row_padding * 2)
 		+ '" stroke="none" stroke-width="0" fill="' + this.row_color + '"></rect>';
 
+	    fulllabel = label;
 	    if (label.length > max)
 		label = label.substring(0, max - 3) + "...";
-	    res = res + '<text title="' + label + '"  horaire="' + shoraire + '" id="TT_' + i
-		+ '"x="' + u(x1 + 10) + '" y="' + u(this.row_height - this.row_padding - 12)
+	    res = res + '<text title="' + fulllabel + '" owner="' + owner +'" horaire="' + shoraire
+		+ '" id="TT_' + i + '" rid="T_' + i
+		+ '" x="' + u(x1 + 10) + '" y="' + u(this.row_height - this.row_padding - 12)
 		+ '" text-anchor="start" width="' + u(x2 - x1) + '"' 
 		+ ' font-family="' + this.row_font_family + '" font-size="' + this.row_font_size 
 		+ '" stroke-width="0" stroke="#000000" fill="' + this.row_font_color + '">' + label + '</text>';
@@ -143,10 +147,13 @@ function Timeline (el) {
 	}
 	res = res + '</g>';
 
+	// tooltips
+
 	res = res + '</svg></div>'
             + '<div id="tl_tooltip" style="position: absolute; padding: 5px; '
-	    + 'left: 0px; top: -70px; width: ' + this.tooltip_width + 'px; height:' + this.tooltip_height + 'px; opacity: 0.5; '
-	    + 'background-color: #fff; color: #000; visibility: hidden;">pouet</div>'
+	    + 'left: 0px; top: -' +u(20 + this.tooltip_height) + 'px; width: '
+	    + this.tooltip_width + 'px; height:' + this.tooltip_height + 'px; opacity: ' + this.tooltip_opacity + '; '
+	    + 'background-color: ' + this.tooltip_bgcolor + '; color: #000; visibility: hidden;"></div>'
 	    + '</div></div>';
 
 	this.el.html(res);
@@ -155,13 +162,21 @@ function Timeline (el) {
 	{
 	    $("#TT_" + i).click(function (){
 		//alert($(this).attr("title"));
-		$("#tl_tooltip").html($(this).attr("title") + "<br />\n" + $(this).attr("horaire"));
+		rid = "#" + $(this).attr("rid");
+		$(rid).attr("stroke-width", "2");
+		$("#tl_tooltip").html(
+		    $(this).attr("title") + "<br />\n"
+			+ $(this).attr("owner") + "<br />\n"
+			+ $(this).attr("horaire"));
 		$("#tl_tooltip").css("visibility", "visible");
 		x = u($(this).attr("x"));
 		max = u(u(graph_right) - u(tooltip_width));
 		if (x > max)
 		    x = max;
 		$("#tl_tooltip").css("left", x + "px");
+	    });
+	    $("#T_" + i).click(function (){
+		$("#T" + $(this).attr('id')).trigger("click");
 	    });
 	}
     };
