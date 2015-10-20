@@ -1,5 +1,6 @@
 function Timeline (el) {
-    this.data = [
+    this.data = [];
+    this.data2 = [
 	['Accueil',          'ns@staff.42.fr', [09, 00], [11, 00]],
 	['CSS Fundamentals', 'Andre AUBIN', [11, 30], [14, 00]],
 	['Intro JavaScript', 'sebastien.benoit@gmail.com', [14, 30], [15, 37]],
@@ -243,7 +244,12 @@ function Timeline (el) {
 	}
     };
 
-    this.add_item = function (label, tooltip, start, end) {
+    this.add_item = function (label, author, start, stop) {
+	this.data.push([label, author[0], start, stop]);
     };
+
+    this.load_data = function (url) {
+    };
+
     return (this);
 }

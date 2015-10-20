@@ -21,21 +21,35 @@
 
     <script type="text/javascript" src="js/timeline.js"></script>
     <script type="text/javascript">
+
+   var tl;
+
    myOnLoad = function() {
      tl = Timeline("#timeline2");
      tl.bgcolor = "#3367d6";
      tl.row_bgcolor = "#3367d6";
-     tl.draw();
+     //tl.data = [];
+     $.getJSON("api/cal.py", function (d) {
+	 for (j = 0; j < d.length; j++)
+	    {
+	      tl.add_item(
+			  d[j].label,
+			  d[j].author,
+			  d[j].start,
+			  d[j].stop
+			  );
+	    }
+	 tl.draw();
 
-     setInterval(function(){ 
-	 tl.update();
-	 $("#timeline_status").html(tl.current_name);
-	 $("#timeline_time").html(tl.current_time);
-	 if (tl.in_event)
-	   $("header").removeClass("dispo").addClass("indispo");
-	 else
-	   $("header").removeClass("indispo").addClass("dispo");
-       }, 1000);
-
+	 setInterval(function(){ 
+	     tl.update();
+	     $("#timeline_status").html(tl.current_name);
+	     $("#timeline_time").html(tl.current_time);
+	     if (tl.in_event)
+	       $("header").removeClass("dispo").addClass("indispo");
+	     else
+	       $("header").removeClass("indispo").addClass("dispo");
+	   }, 1000);
+       });
    }
     </script>
