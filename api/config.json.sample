@@ -1,5 +1,5 @@
 {
 	"URL":"https://owa.domain.com/EWS/Exchange.asmx",
 	"USERNAME":"DOMAIN\\user",
-	"PASSWORD" = "P@ssw0rd"
+	"PASSWORD":"P@ssw0rd"
 }
