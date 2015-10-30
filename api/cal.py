@@ -5,10 +5,6 @@ from pytz import timezone
 import pickle
 import json
 
-URL = u'https://owa.42.fr/EWS/Exchange.asmx'
-USERNAME = u'STAFF.42.FR\\sb'
-PASSWORD = u"mail42sh@"
-
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
@@ -17,17 +13,21 @@ class DateTimeEncoder(json.JSONEncoder):
             encoded_object =json.JSONEncoder.default(self, obj)
         return encoded_object
 
+config = read_config("config.json")
 
 # Set up the connection to Exchange
-connection = ExchangeNTLMAuthConnection(url=URL,
-                                        username=USERNAME,
-                                        password=PASSWORD)
+connection = ExchangeNTLMAuthConnection(url=config['URL'],
+                                        username=config['USERNAME'],
+                                        password=config['PASSWORD'])
 
 service = Exchange2010Service(connection)
 
 calendar_list = service.calendar().list_events(
-    start=timezone("Europe/Paris").localize(datetime(2015, 10, 20, 0, 0, 0)),
-    end=timezone("Europe/Paris").localize(datetime(2015, 10, 20, 23, 59, 59)),
+    y = date.today().year
+    m = date.today().month
+    d = date.today().day
+    start=timezone("Europe/Paris").localize(datetime(y, m, d, 0, 0, 0)),
+    end=timezone("Europe/Paris").localize(datetime(y, m, d, 23, 59, 59)),
     details=True
 )
 
