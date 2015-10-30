@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 from pyexchange import Exchange2010Service, ExchangeNTLMAuthConnection
-from datetime import datetime
+from datetime import date,datetime
 from pytz import timezone
 import pickle
 import json
+
+def read_config(confname):
+    with open(confname) as json_data_file:
+        data = json.load(json_data_file)
+    return (data)
 
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -22,10 +27,10 @@ connection = ExchangeNTLMAuthConnection(url=config['URL'],
 
 service = Exchange2010Service(connection)
 
+y = date.today().year
+m = date.today().month
+d = date.today().day
 calendar_list = service.calendar().list_events(
-    y = date.today().year
-    m = date.today().month
-    d = date.today().day
     start=timezone("Europe/Paris").localize(datetime(y, m, d, 0, 0, 0)),
     end=timezone("Europe/Paris").localize(datetime(y, m, d, 23, 59, 59)),
     details=True
