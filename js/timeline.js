@@ -2,10 +2,16 @@ function Timeline (el) {
     this.data = [];
     this.color = "#fff";
     this.bgcolor = "#00e";
-    this.row_color = "#d00";
+    this.row_color = "#f00";
+    this.row_past_color = "#d44";
     this.row_bgcolor = "#00f";
+    this.row_transparency = "0.8";
+    //this.row_border_color = "#2e5dc1";
+    this.row_border_color = "#aaf";
+    this.row_border_width = "2";
     this.row_height = 50;
     this.row_padding = 5;
+    
     this.elname = el;
     this.el = $(el);
     this.x = this.el.width();
@@ -15,6 +21,7 @@ function Timeline (el) {
     this.graph_padding = 10;
     this.graph_cell = 0;
     this.axis_padding_top = 20;
+    this.axis_font_color = "white";
     this.axis_font_family = "Arial";
     this.axis_font_size = 13;
     this.row_font_family = "Arial";
@@ -66,6 +73,11 @@ function Timeline (el) {
     };
 
     this.draw = function () {
+
+	var today = new Date();
+	var h = today.getHours();
+	var m = today.getMinutes();
+
 	this.parse_data();
 	res = '<div style="position: relative;">'
 	    + '<div dir="ltr" style="position: relative; width: ' + this.x +'px; height: ' + this.y + 'px;">'
@@ -76,7 +88,7 @@ function Timeline (el) {
 	    + '<rect x="0" y="0" width="' + this.x + '" height="' + this.y
 	    + '" stroke="none" stroke-width="0" fill="' + this.bgcolor + '"></rect>'
 	    + '<rect x="' + this.graph_left + '" y="0" width="' + this.graph_witdh + '" height="' + this.row_height
-	    + '" stroke="#808080" stroke-width="1" fill="' + this.row_bgcolor + '"></rect>'
+	    + '" stroke="' + this.row_border_color + '" stroke-width="' + this.row_border_width + '" fill="' + this.row_bgcolor + '"></rect>'
 	    + '</g>';
 	u = Math.round;
 
@@ -87,7 +99,7 @@ function Timeline (el) {
 	{
 	    x = u(this.graph_left + this.t_to_x(i, 0));
 	    res = res + '<path d="M' + x + ',0L' + x + ',' + this.row_height
-		+ '" stroke="#2e5dc1" stroke-width="1" fill-opacity="1" fill="none"></path>';
+		+ '" stroke="' + this.row_border_color + '" stroke-width="' + this.row_border_width + '" fill-opacity="1" fill="none"></path>';
 	}
 	res = res + '</g>';
 
@@ -98,6 +110,7 @@ function Timeline (el) {
 	{
 	    res = res + '<text x="' + u(this.axis_left + this.t_to_x(i, 0))
 		+ '" y="' + this.axis_top
+		+ '" fill="' + this.axis_font_color
 		+ '" text-anchor="' + (i == 0 ? 'start' : (i == this.nb_hours ? 'end' : 'middle'))
 		+ '" font-family="' + this.axis_font_family + '" font-size="' + this.axis_font_size 
 		+'" stroke-width="0" stroke="#000000">' + u(this.first_hour + i) + '</text>';
@@ -124,7 +137,8 @@ function Timeline (el) {
 	    res = res + '<rect id="T_' + i + '" class="timerect" rx="5" ry="5" '
 		+ '" x="' + x1 + '" y="' + this.row_padding + '" width="' + u(x2 - x1) + '" height="'
 		+ u(this.row_height - this.row_padding * 2)
-		+ '" stroke="#000000" stroke-width="0" fill="' + this.row_color + '"></rect>';
+		+ '" stroke="#000000" stroke-width="0" fill="' + ((this.tcmp([h, m], stop) > 0) ? this.row_color : this.row_past_color)
+		+ '" fill-opacity="'+ this.row_transparency + '"></rect>';
 
 	    fulllabel = label;
 	    if (label.length > max)
@@ -140,10 +154,6 @@ function Timeline (el) {
 	res = res + '</g>';
 
 	// current time line
-
-       var today = new Date();
-       var h = today.getHours();
-       var m = today.getMinutes();
 
 	xctl = this.graph_left + this.t_to_x(h - this.first_hour, m);
 	res = res + '<g><line id="ctl" x1="' + xctl + '" y1="0" x2="' + xctl
@@ -187,6 +197,8 @@ function Timeline (el) {
 	});
     };
 
+    // is t between t1 and t2 ?
+
     this.in_interval = function(t, t1, t2) {
 	if ((t[0] < t1[0]) || (t[0] > t2[0]))
 	    return false;
@@ -197,6 +209,16 @@ function Timeline (el) {
 	if ((t[0] == t2[0]) && (t[1] >= t2[1])) // e.g.: 14:12 > 12:15-14:05
 	    return false;
 	return true;
+    };
+
+    // t2 > t1 ? --> >0
+    // t2 < t1 ? --> <0
+    // t2 = t1 ? -->  0
+
+    this.tcmp = function(t1, t2) {
+	n1 = (t1[0] * 100) + t1[1];
+	n2 = (t2[0] * 100) + t2[1];
+	return (n2 - n1);
     };
 
     this.update = function () {
