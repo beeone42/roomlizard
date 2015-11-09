@@ -1,11 +1,5 @@
 function Timeline (el) {
     this.data = [];
-    this.data2 = [
-	['Accueil',          'ns@staff.42.fr', [09, 00], [11, 00]],
-	['CSS Fundamentals', 'Andre AUBIN', [11, 30], [14, 00]],
-	['Intro JavaScript', 'sebastien.benoit@gmail.com', [14, 30], [15, 37]],
-	['Advanced Javascript', 'jacob@staff.42.fr', [16, 30], [19, 00]]
-    ];
     this.color = "#fff";
     this.bgcolor = "#00e";
     this.row_color = "#d00";
@@ -223,7 +217,7 @@ function Timeline (el) {
 	    {
 		in_event = true;
 		this.current_name = d[0];
-		this.current_time = d[2][0] + ":" + d[2][1] + " - " + d[3][0] + ":" +d[3][1];
+		this.current_time = this.t_to_str(d[2][0], d[2][1]) + " - " + this.t_to_str(d[3][0], d[3][1]);
 	    }
 	}
 	if (!this.in_event)
@@ -240,7 +234,7 @@ function Timeline (el) {
 		    m2 = d[2][1];
 		}
 	    }
-	    this.current_time = h + ":" + m + " - " + h2 + ":" + m2;
+	    this.current_time = this.t_to_str(h, m) + " - " + this.t_to_str(h2, m2);
 	}
     };
 
