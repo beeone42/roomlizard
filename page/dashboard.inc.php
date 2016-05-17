@@ -29,7 +29,7 @@
      tl.bgcolor = "#3367d6";
      tl.row_bgcolor = "#3367d6";
      //tl.data = [];
-     $.getJSON("api/cal2.py", function (d) {
+     $.getJSON("api/cal.json", function (d) {
 	 for (j = 0; j < d.length; j++)
 	    {
 	      tl.add_item(
