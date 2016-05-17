@@ -29,7 +29,7 @@
      tl.bgcolor = "#3367d6";
      tl.row_bgcolor = "#3367d6";
      //tl.data = [];
-     $.getJSON("api/cal.py", function (d) {
+     $.getJSON("api/cal2.py", function (d) {
 	 for (j = 0; j < d.length; j++)
 	    {
 	      tl.add_item(
@@ -50,6 +50,9 @@
 	     else
 	       $("header").removeClass("indispo").addClass("dispo");
 	   }, 1000);
+       });
+       $('#clock').click(function(){
+	location.reload(true);
        });
    }
     </script>
