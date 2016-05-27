@@ -261,7 +261,7 @@ function Timeline (el) {
     };
 
     this.add_item = function (label, author, start, stop) {
-	this.data.push([label, author[0], start, stop]);
+	this.data.push([label, Array.isArray(author) ? author[0] : author, start, stop]);
     };
 
     this.load_data = function (url) {
